@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <script src="Scripts/jquery-1.10.2.min.js"></script>    
+    <script src="Scripts/jquery.signalR-2.2.2.min.js"></script>    
+    <script src="signalr/hubs"></script> 
+    <script type="text/javascript">
+        $(function () {
+            //Create hub connection 
+            var connection = $.connection.hub;
+            var chatHub = $.connection.chatHub;
+ 
+            //Handle a broadcast 
+            chatHub.client.broadcast = function (broadcastMessage) {
+                console.log(broadcastMessage);
+                for(var i = 1;i<=10;i++){
+                    $('#output').append(broadcastMessage);
+                }
+
+            };
+            
+            chatHub.client.chattext = function(message){
+                console.log(message);
+            };
+
+            var name = prompt("Please enter name");
+            console.log("my name is " + name);
+
+
+            chatHub.client.chatto = function(fromUser,message){
+                $("#output").append(message);
+                console.log(" fromUser : "+ fromUser);
+                console.log(" message  : "+ message);
+
+            }
+
+            $.connection.hub.start().done(function () {
+                $('#sendmessage').click(function () {
+                    //Call the hub server send 
+                   // chatHub.server.send('A Message');
+                    //chatHub.server.chat('Test >>>');
+                    //console.log("Name var : "+name);
+                    var message = $('#message').val();
+                    //console.log(message);
+                    var touser  = $('#toUser').val();
+
+                    console.log(message + touser + name);
+                    chatHub.server.privatechat(name,message,touser);
+                    chatHub.client.chatto(name,message);
+                });
+            });
+        });
+    </script> 
+</head>
+<body>
+    
+    <div> Message <input type="text" id="message" value=""></div>
+    <div> Send to <input type="text" id="toUser" value=""></div>
+    <input type="button" id="sendmessage" value="Send" />
+    <div id="output"></div>
+
+</body>
+
+</html>
