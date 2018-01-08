@@ -1,0 +1,137 @@
+<html>
+	<head>
+
+			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
+            <link rel="stylesheet" type="text/css" href="css/privatestyle.css">
+		    <script src="Scripts/jquery-1.10.2.min.js"></script>    
+   			<script src="Scripts/jquery.signalR-2.2.2.min.js"></script>    
+    		<script src="signalr/hubs"></script>
+    		<script type="text/javascript">
+    			//--------------------------------------
+
+                //GenUser 
+                function makeid() {
+                var text = "";
+                var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+                for (var i = 0; i < 5; i++)
+                    text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+                return text;
+                }
+
+                console.log(makeid());
+                
+
+                $(document).ready(function(){
+                    $("#fromuser").val(makeid());
+                    $("#fromuser").prop('disabled',true);
+                });
+
+    			var connection = $.connection.hub;
+    			var chatHub    = $.connection.chatHub;
+
+    			var fromuser   = "Test";
+    			//var fromuser   =  prompt('Please insert your name ;',''); 
+    			chatHub.client.onPrivateMessage1 = function(fromUserName,message){
+    				$('#displayarea').append(fromUserName + " : " + message + "<br>");
+                    $("textarea").val('');
+    			}
+
+                chatHub.client.broadcast = function(fromUserName,message){
+                    // working 
+                    $("#displayarea").append(" <b>"+ fromUserName + "</b> : "+ message+" <br>");
+                    console.log(message);
+                    $("textarea").val('');
+                }
+
+    			console.log($.connection.$user);
+
+    			$.connection.hub.start().done(function(){
+
+    				$.connection.$user($('#fromuser').val());
+                    /*
+    				$('#send').click(function(){
+    					//chatHub.server.privateSend(fromuser,$('#touser').val(),$('#msg').val());
+    					//chatHub.client.onPrivateMessage1(fromuser, $('#msg').val());
+    				});
+                    */
+
+                    $("#sendData").click(function(){
+                        //console.log($('#txtarea').val());  
+                        //publicSend(username,message) 
+
+                        /* Broadcast work!!! */
+                            //chatHub.server.publicSend($("#fromuser").val(),$("#txtarea").val());
+
+
+                        /* Private Chat 
+                            privatedsend(fromuser,touser,message)
+                        */
+                            //chatHub.server.privateSend($("#fromuser").val(),$('#touser').val(),$('#txtarea').val());
+                            //chatHub.client.onPrivateMessage1($("#fromuser").val(),$('#txtarea').val());
+                        console.log($("#touser").val().length);
+                         if($("#touser").val() == 0){
+                           chatHub.server.publicSend($("#fromuser").val(),$("#txtarea").val());
+                         }else{
+                            chatHub.server.privateSend($("#fromuser").val(),$('#touser').val(),$('#txtarea').val());
+                            chatHub.client.onPrivateMessage1($("#fromuser").val(),$('#txtarea').val());
+                         }       
+                    });
+    			});
+
+                
+                     
+    		</script>
+	</head>
+	<body>
+    <!--
+			<div class="container">
+  				<div class="row">
+    				<div class="col"> <input type="text" id="msg" placeholder="message"> </div>
+    				<div class="col">Column</div>
+    			<div class="w-100"></div>
+    				<div class="col">Column</div>
+    				<div class="col">Column</div>
+  				</div>
+			</div>
+					<input type="text" id="touser" placeholder="receiver"> 
+					<button value="submit" type="submit" id="send">Send Message</button>
+					<div id="discuss"></div>
+			
+    -->
+
+        <div class="container">
+            <div class="row">
+                <div class="col" id="chatdisplay">
+                    <div class="sampleborder">
+                        <div id="displayarea"></div>
+                        <!--
+                        <p>Joe : Test1</p>
+                        <p>Joe :Test2</p>
+                        <p>Sett :Test3</p>
+                        <p>Joe :Test4</p>
+                        -->
+                    </div>                    
+                </div>
+            </div>
+            <div class="row">
+                <div class="col" id="chatinput">
+                    <div class="row sampleborder" >
+                        <input type="text" name="touser" value="" placeholder=" Send to " id="touser">
+                    </div>
+                    <div class="row sampleborder" >
+                        <input type="text" name="fromuser" value="" placeholder=" My Name" id="fromuser">
+                    </div>                    
+                    <div class="row sampleborder">
+                        <textarea class="col" rows="3" value="" id="txtarea"></textarea>    
+                    </div>
+                    <div class="row sampleborder">
+                        <button value="submit" type="submit" id="sendData">Send Message</button>
+                    </div>                    
+                </div>
+            </div>
+        </div>
+
+	</body>
+</html>

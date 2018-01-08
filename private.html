@@ -38,20 +38,20 @@
                                         + encodedMsg + '</li>');
             };
             // Get the user name and store it to prepend to messages.
-            $('#userName').val(prompt('Enter your userName:', ''));
+            $('#userName1').val(prompt('Enter your userName:', ''));
             // Set initial focus to message input box.  
             $('#message').focus();
 
             $.connection.hub.start().done(function () {
-                $.connection.$user($('#userName').val());
+                $.connection.$user($('#userName1').val());
                 $('#sendmessage').click(function () {
-                    chatHub.server.broadcast($('#userName').val(),$('#message').val());
+                    chatHub.server.broadcast($('#userName1').val(),$('#message').val());
                     $('#message').val('').focus();
                 });
                 $('#sendPrivateMessage').click(function () {
-                    chatHub.server.privateSend($('#userName').val(),$('#privateMessageToUser').val(),$('#privateMessage').val());
+                    chatHub.server.privateSend($('#userName1').val(),$('#privateMessageToUser').val(),$('#privateMessage').val());
 
-                    chatHub.client.onPrivateMessage1($('#userName').val(),$('#privateMessage').val())
+                    chatHub.client.onPrivateMessage1($('#userName1').val(),$('#privateMessage').val())
                     $('#privateMessage').val('').focus();
                 });
             });
@@ -59,7 +59,7 @@
     </script>
 </head>
 <body>
-    <input type="hidden" id="userName" />
+    <input type="hidden" id="userName1" />
     <div class="container">
         <h1>Group Messages</h1>
         <input type="text" id="message" />
