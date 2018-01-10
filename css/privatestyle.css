@@ -1,6 +1,8 @@
 #chatdisplay{
 	width: 100%;
 	background-color:  #ccffff;
+	height: 50%;
+	overflow: scroll;
 }
 #chatinput{
 	background-color:  #f2f2f2;	

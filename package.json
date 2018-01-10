@@ -12,6 +12,7 @@
     "jquery": "^3.2.1",
     "jsdom": "^10.1.0",
     "multer": "^1.3.0",
+    "mysql": "^2.15.0",
     "signalr-client": "0.0.17",
     "signalrjs": "^0.2.2"
   },
